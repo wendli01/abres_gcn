@@ -1,9 +1,10 @@
-from typing import Sequence
+from typing import Sequence, Dict
+
+import matplotlib
 import networkx as nx
 import numpy as np
 import numpy.random
 import pandas as pd
-import seaborn as sns
 from matplotlib import pyplot as plt
 from networkx import convert_node_labels_to_integers
 from sklearn.metrics import average_precision_score, precision_recall_curve, roc_auc_score
@@ -43,21 +44,31 @@ def create_neg_graph(X: nx.DiGraph, random_state: int = 42, negative_sampling_ra
     return X_neg
 
 
-def plot_type_scores(X: nx.DiGraph, type_scores):
-    def get_type_level(n, primitive_types=('pmString', 'pmLabel', 'pmDate', 'pmNumber', 'pmDateTime')):
-        return np.min([nx.shortest_path_length(type_graph, n, p_type) if
-                       nx.has_path(type_graph, n, p_type) else np.infty for p_type in primitive_types])
-
+def plot_type_scores(X: nx.DiGraph, type_scores, color_fun=nx.degree_centrality, max_marker_size: int = 400,
+                     min_marker_size: int = 30):
     type_graph = generate_type_graph(X)
-    type_levels = {n: get_type_level(n) for n in type_graph.nodes}
+    node_colors: Dict[str, float] = color_fun(type_graph)
+
     type_scores_df = pd.DataFrame.from_records(np.hstack(type_scores))
     n_splits = len(type_scores_df['fold'].unique())
     score_counts = type_scores_df.groupby(['node_type']).score.count()
     type_scores_df = type_scores_df[type_scores_df.node_type.isin(score_counts.index[score_counts == 2 * n_splits])]
-    type_scores_df['type_level'] = type_scores_df.node_type.map(type_levels)
-    sns.catplot(data=type_scores_df, x='node_type', y='score', row='kind', kind='box', aspect=4, hue='type_level',
-                order=type_scores_df.fillna(-1).groupby('node_type').score.mean().sort_values().index, dodge=False)
-    plt.xticks(rotation=90)
+
+    agg_df = type_scores_df.pivot(index=['node_type', 'fold'], columns=['kind'], values=['score'])
+    agg_df = agg_df.fillna(-1).groupby('node_type').agg([np.mean, np.std])
+
+    c = pd.Series(agg_df.index).map(node_colors)
+    max_std = np.max(np.vstack([agg_df.score.target['std'], agg_df.score.source['std']]))
+    x, y = agg_df.score.source['mean'], agg_df.score.target['mean']
+    size_scale = (max_marker_size - min_marker_size) / max_std
+
+    plt.figure(figsize=(7, 5), dpi=150)
+    plt.scatter(x=x, y=y, c=c, s=min_marker_size + agg_df.score.source['std'] * size_scale, marker='_',
+                norm=matplotlib.colors.LogNorm())
+    s = plt.scatter(x=x, y=y, c=c, s=min_marker_size + agg_df.score.target['std'] * size_scale, marker='|',
+                    norm=matplotlib.colors.LogNorm())
+    plt.colorbar(s, label=color_fun.__name__.replace('_', ' ') + ' in type graph')
+    plt.xlabel('source score'), plt.ylabel('target score'), plt.gca().set_aspect('equal', adjustable='box')
     plt.show()
 
 
