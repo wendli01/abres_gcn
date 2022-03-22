@@ -20,28 +20,6 @@ from nn import GCN, GCNEstimator, KarateclubTransformer
 from util import create_neg_graph
 
 
-class CentralityTransformer(BaseEstimator):
-    def __init__(self, centralities=(nx.in_degree_centrality, nx.out_degree_centrality,
-                                     nx.eigenvector_centrality_numpy, nx.pagerank_scipy)):
-        self.centralities = centralities
-
-    def transform(self, graph, mask=None):
-        if mask is not None:
-            relevant_nodes = mask[mask].keys()
-            nodes = [n for n in graph.nodes if n in relevant_nodes]
-        else:
-            nodes = graph.nodes
-
-        centralities = [c(graph) for c in self.centralities]
-        return np.array([[centrality[node] for centrality in centralities] for node in nodes])
-
-    def fit(self, *_, **__):
-        return self
-
-    def fit_transform(self, graph, *_, mask=None):
-        return self.transform(graph, mask=mask)
-
-
 class NeighTypeVectorizer(BaseEstimator):
     def __init__(self):
         self.node_type_enc_ = None
