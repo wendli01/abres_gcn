@@ -6,7 +6,10 @@ It contains all code as well as experimental setups described in the paper inclu
 
 
 If you use code, data or any results in this repository, please cite:
->
+
+```bibtex
+
+```
 
 ## Experiments
 
