@@ -10,7 +10,7 @@ If you use code, data or any results in this repository, please cite:
 
 ## Experiments
 
-Complete experiments are stored in the notebooks for [link prediction](link_prediction.py) and basic [network analysis](network_analysis.ipynb).
+Complete experiments are stored in the notebooks for [link prediction](link_prediction.ipynb) and basic [network analysis](network_analysis.ipynb).
 
 ## Dataset
 
