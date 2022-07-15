@@ -14,7 +14,7 @@ Complete experiments are stored in the notebooks for [link prediction](link_pred
 
 ## Dataset
 
-The [TEAM-IP-1 Dataset](team_ip_1.gml)  described in the paper is also included in this repository.
+The [TEAM-IP-1 Dataset](team_ip_1.zip)  described in the paper is also included in this repository.
 
 ## Installation
 
