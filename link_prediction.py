@@ -408,7 +408,7 @@ class LinkPredictionWrapper(BaseEstimator):
 
     def predict_proba(self, X: nx.DiGraph, X_test: nx.DiGraph) -> np.ndarray:
         node_embeddings = self.transform(X)
-        u, v = np.array(X_test.edges()).T
+        u, v = np.vstack(list(X_test.edges())).T
         u_emb, v_emb = node_embeddings[u], node_embeddings[v]
         return self.decoder.predict_proba(u_emb, v_emb)
 
