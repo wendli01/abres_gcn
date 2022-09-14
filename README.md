@@ -1,6 +1,6 @@
 # Reconciliation of Mental Concepts with Graph Neural Networks
 
-This repository accompanies the DEXA 2022 paper [Reconciliation of Mental Concepts with Graph Neural Networks]().
+This repository accompanies the DEXA 2022 paper [Reconciliation of Mental Concepts with Graph Neural Networks](https://link.springer.com/chapter/10.1007/978-3-031-12426-6_11).
 
 It contains all code as well as experimental setups described in the paper including results with al visualizations as standalone `jupyter` notebooks.
 
@@ -8,7 +8,14 @@ It contains all code as well as experimental setups described in the paper inclu
 If you use code, data or any results in this repository, please cite:
 
 ```bibtex
-
+@inproceedings{wendlinger2022reconciliation,
+  title={Reconciliation of Mental Concepts with Graph Neural Networks},
+  author={Wendlinger, Lorenz and H{\"u}bscher, Gerd and Ekelhart, Andreas and Granitzer, Michael},
+  booktitle={International Conference on Database and Expert Systems Applications},
+  pages={133--146},
+  year={2022},
+  organization={Springer}
+}
 ```
 
 ## Experiments
